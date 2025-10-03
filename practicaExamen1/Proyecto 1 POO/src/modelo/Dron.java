@@ -70,6 +70,7 @@ public class Dron {
         this.enPatrullaje = enPatrullaje;
     }
 
+    //Métodos adicionales
     /*
     realizarPatrullaje(){}
     Realiza una hora de patrullaje (consume 25% de batería)

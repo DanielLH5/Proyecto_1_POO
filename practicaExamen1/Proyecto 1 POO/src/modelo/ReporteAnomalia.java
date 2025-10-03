@@ -1,12 +1,13 @@
 package modelo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReporteAnomalia {
     private Evento evento;
     private LocalDateTime fechaHora;
     private String idDron;
-    private Accion accionEjecutada;
+    private List<Accion> acciones;
 
     public ReporteAnomalia(Evento evento, LocalDateTime fechaHora, String idDron) {
         this.evento = evento;
@@ -27,12 +28,13 @@ public class ReporteAnomalia {
         return idDron;
     }
 
-    public Accion getAccionEjecutada() {
-        return accionEjecutada;
+    public List<Accion> getAcciones() {
+        return acciones;
     }
 
-    public void setAccionEjecutada(Accion accionEjecutada) {
-        this.accionEjecutada = accionEjecutada;
+    public ReporteAnomalia setAcciones(List<Accion> acciones) {
+        this.acciones = acciones;
+        return this;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class ReporteAnomalia {
                 "evento=" + evento +
                 ", fechaHora=" + fechaHora +
                 ", idDron='" + idDron + '\'' +
-                ", accionEjecutada=" + accionEjecutada +
+                ", acciones=" + acciones +
                 '}';
     }
 }
