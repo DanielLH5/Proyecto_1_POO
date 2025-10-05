@@ -1,63 +1,61 @@
 package logica;
 
+import modelo.Ciudadano;
+import modelo.Edificio;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PerfilOperativo {
     private List<GestorDrones> gDrones;
-    private List<GestorCiudadanos> gCiudadanos;
-    private List<GestorEdificios> gEdificios;
+    private GestorCiudadanos gCiudadanos;
+    private GestorEdificios gEdificios;
     private List<GestorRobots> gRobots;
     private List<GestorEstaciones> gEstaciones;
 
     public PerfilOperativo() {
+
+        gCiudadanos = new GestorCiudadanos();
+        gEdificios = new GestorEdificios();
         gDrones = new ArrayList<GestorDrones>();
-        gCiudadanos = new ArrayList<GestorCiudadanos>();
-        gEdificios = new ArrayList<GestorEdificios>();
         gRobots = new ArrayList<GestorRobots>();
         gEstaciones = new ArrayList<GestorEstaciones>();
     }
 
-    // Getters para que el Control principal acceda a los gestores
-    public List<GestorDrones> getGestorDrones() {
-        return gDrones;
+    //CRUD Ciudadanos
+    public boolean crearCiudadano(String id, String nombre, String edificioId, String idRobot) {
+        if(gEdificios.verificarCapAcidadEdificio(edificioId, 1)){
+            if (gCiudadanos.crearCiudadano(id, nombre, edificioId)){
+                gEdificios.disminuirCapacidadEdificio(edificioId, 1);
+                return true;
+            }
+        } else  {
+            System.out.println("No hay espacio en el edificio");
+        } return false;
     }
 
-    public List<GestorCiudadanos> getGestorCiudadanos() {
-        return gCiudadanos;
+    public boolean actualizarCiudadano(String id, String nuevoNombre, String nuevoEdificioId, String nuevoidRobot) {
+        if(gEdificios.verificarCapAcidadEdificio(nuevoEdificioId, 1)){
+            if (gCiudadanos.actualizarCiudadano(id, nuevoNombre, nuevoEdificioId, nuevoidRobot)){
+                gEdificios.disminuirCapacidadEdificio(nuevoEdificioId, 1);
+                return true;
+            }
+        } else  {
+            System.out.println("No hay espacio para mudarlo de edificio");
+        }return false;
     }
 
-    public List<GestorEdificios> getGestorEdificios() {
-        return gEdificios;
+    public boolean eliminarCiudadano(String id) {
+        Ciudadano ciudadano = gCiudadanos.obtenerCiudadano(id);
+        gEdificios.removerCiudadano(ciudadano);
+        return gCiudadanos.eliminarCiudadano(id);
     }
 
-    public List<GestorRobots> getGestorRobots() {
-        return gRobots;
+    public String obtenerCiudadano(String id) {
+        modelo.Ciudadano ciudadano = gCiudadanos.obtenerCiudadano(id);
+        return ciudadano != null ? ciudadano.toString() : "Ciudadano no encontrado";
     }
 
-    public List<GestorEstaciones> getGestorEstaciones() {
-        return gEstaciones;
-    }
-
-    /*
-    // ===== GESTIÓN DE CIUDADANOS (Requerimiento 7) =====
-    registrarCiudadano(String id, String nombre, String idEdificio){}
-    Registra un ciudadano individual verificando capacidad del edificio
-    Retorna boolean indicando éxito
-
-    registrarCiudadanosBloque(int cantidad){}
-    Registra un grupo de N ciudadanos de forma masiva
-    Asigna automáticamente edificios con capacidad disponible
-    Retorna boolean indicando éxito
-
-    actualizarCiudadano(String id, String nuevoNombre, String nuevoEdificio){}
-    Actualiza datos de un ciudadano existente
-    Retorna boolean indicando éxito
-
-    eliminarCiudadano(String id){}
-    Elimina un ciudadano del sistema
-    Retorna boolean indicando éxito
-    */
 
     /*
     // ===== GESTIÓN DE ROBOTS (Requerimiento 8) =====

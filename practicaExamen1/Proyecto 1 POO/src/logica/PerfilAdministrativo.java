@@ -9,9 +9,9 @@ import modelo.EstadoEstacion;
 public class PerfilAdministrativo {
     private List<GestorDrones> gDrones;
     private List<GestorCiudadanos> gCiudadanos;
-    private List<GestorEdificios> gEdificios;
+    private GestorEdificios gEdificios;
     private List<GestorRobots> gRobots;
-    private List<GestorEstaciones> gEstaciones;
+    private GestorEstaciones gEstaciones;
 
     // Reglas del sistema (según especificaciones página 4)
     private int umbralBateriaMinimaDrones;
@@ -21,22 +21,66 @@ public class PerfilAdministrativo {
 
     // Asociaciones evento-acción para el Consejo de Inteligencia
     private java.util.Map<Evento, List<Accion>> asociacionesEventoAccion;
+    private ArrayList<String> eventos;
+    private ArrayList<String> acciones;
 
     public PerfilAdministrativo(){
         gDrones = new ArrayList<GestorDrones>();
         gCiudadanos = new ArrayList<GestorCiudadanos>();
-        gEdificios = new ArrayList<GestorEdificios>();
+        gEdificios = new GestorEdificios();
         gRobots = new ArrayList<GestorRobots>();
-        gEstaciones = new ArrayList<GestorEstaciones>();
+        gEstaciones = new GestorEstaciones();
 
         // Valores por defecto para las reglas
         this.umbralBateriaMinimaDrones = 20;
         this.umbralBateriaMinimaRobots = 15;
         this.reglaDronesActiva = true;
         this.reglaRobotsActiva = true;
+        this.eventos = new ArrayList<>();
+        this.acciones = new ArrayList<>();
 
         this.asociacionesEventoAccion = new java.util.HashMap<>();
+        inicializarEventosPredefinidos();
+        inicializarAccionesPredefinidas();
         inicializarAsociacionesPredefinidas();
+    }
+
+
+/**
+ * Inicializa los eventos pre-registrados (Requerimiento 3)
+ * Se ejecuta automáticamente en el constructor
+ */
+    private void inicializarEventosPredefinidos() {
+        eventos.clear();
+
+        // Eventos pre-registrados según el requerimiento
+        eventos.add("Colisión vehicular");
+        eventos.add("Congestión vehicular");
+        eventos.add("Desarrollo de obra pública");
+        eventos.add("Derrames de sustancias peligrosas en carretera");
+        eventos.add("Incendio");
+        eventos.add("Presencia de humo");
+        eventos.add("Presencia de gases");
+        eventos.add("Accidente grave");
+        eventos.add("Presencia de ambulancias en estado de emergencia");
+
+        System.out.println("Eventos predefinidos inicializados: " + eventos.size() + " eventos");
+    }
+
+/**
+ * Inicializa las acciones pre-registradas (Requerimiento 4)
+ * Se ejecuta automáticamente en el constructor
+ */
+    private void inicializarAccionesPredefinidas() {
+        acciones.clear();
+
+        // Acciones predefinidas según el requerimiento
+        acciones.add("Contactar a los bomberos");
+        acciones.add("Contactar a oficiales de tránsito a apersonarse al lugar");
+        acciones.add("Llamar al 911");
+        acciones.add("Convocar ambulancias");
+
+        System.out.println("Acciones predefinidas inicializadas: " + acciones.size() + " acciones");
     }
 
     // ===== MÉTODOS DE INICIALIZACIÓN PRIVADOS =====
@@ -46,69 +90,21 @@ public class PerfilAdministrativo {
         // Esto puede expandirse según las especificaciones
     }
 
-    // ===== GETTERS Y SETTERS PARA LOS GESTORES =====
-    public List<GestorDrones> getGestorDrones() {
-        return gDrones;
-    }
-
-    public List<GestorCiudadanos> getGestorCiudadanos() {
-        return gCiudadanos;
-    }
-
-    public List<GestorEdificios> getGestorEdificios() {
-        return gEdificios;
-    }
-
-    public List<GestorRobots> getGestorRobots() {
-        return gRobots;
-    }
-
-    public List<GestorEstaciones> getGestorEstaciones() {
-        return gEstaciones;
-    }
-
-    // ===== GETTERS Y SETTERS PARA LAS REGLAS =====
-    public int getUmbralBateriaMinimaDrones() {
-        return umbralBateriaMinimaDrones;
-    }
-
-    public int getUmbralBateriaMinimaRobots() {
-        return umbralBateriaMinimaRobots;
-    }
-
-    public boolean isReglaDronesActiva() {
-        return reglaDronesActiva;
-    }
-
-    public boolean isReglaRobotsActiva() {
-        return reglaRobotsActiva;
-    }
-
-    public java.util.Map<Evento, List<Accion>> getAsociacionesEventoAccion() {
-        return new java.util.HashMap<>(asociacionesEventoAccion);
-    }
-
-    /*
     // ===== CONFIGURACIÓN INICIAL DEL SISTEMA =====
-    configurarEdificiosInteligentes(int cantidad, boolean aleatorio){}
-    Crea entre 3-10 edificios inteligentes (Requerimiento 1)
-    Puede ser cantidad definida por admin o aleatoria
-    Retorna boolean indicando éxito
+    public boolean crearEdificiosInteligentes(String id, String nombre, String ubicacion, int capacidad){
+        return gEdificios.crearEdificios(id, nombre, ubicacion, capacidad);
+    }
 
-    configurarEstacionesEnergia(int cantidad, boolean aleatorio){}
-    Crea entre 5-8 estaciones de energía (Requerimiento 2)
-    Puede ser cantidad definida por admin o aleatoria
-    Retorna boolean indicando éxito
+    public String obtenerListaEdificios() {
+        // Lógica para obtener lista formateada
+        return gEdificios.obtenerListaEdificios();
+    }
 
-    inicializarEventosPredefinidos(){}
-    Inicializa los eventos pre-registrados (Requerimiento 3)
-    Se ejecuta automáticamente en el constructor
 
-    inicializarAccionesPredefinidas(){}
-    Inicializa las acciones pre-registradas (Requerimiento 4)
-    Se ejecuta automáticamente en el constructor
-    */
-
+    public boolean crearEstacionesEnergia(String id, String descripcion, String ubicacion, int capacidad, String estadoStr){
+        EstadoEstacion estado = EstadoEstacion.valueOf(estadoStr);
+        return gEstaciones.crearEstaciones(id, descripcion, ubicacion, capacidad, estado);
+    }
     /*
     // ===== GESTIÓN DE ESTACIONES DE ENERGÍA =====
     actualizarEstadoEstacion(String idEstacion, EstadoEstacion nuevoEstado){}
